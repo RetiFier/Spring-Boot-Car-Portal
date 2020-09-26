@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"
+    />
+    <!-- Custom site CSS styles -->
+    <link
+      rel="stylesheet"
+      href="../public/css/styles.css"
+      th:href="@{/css/styles.css}"
+    />
+
+    <!-- 
+	<script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+-->
+    <!-- Custom site scripts  -->
+    <script
+      src="../public/js/blog-scripts.js"
+      th:src="@{/js/blog-scripts.js}"
+    ></script>
+    <title>403</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hidden-xs text-center">
+        <img
+          th:src="@{/img/sunglasses-face.jpg}"
+          src="../../public/img/sunglasses-face.jpg"
+        />
+      </div>
+      <div class="text-center">
+        <div><h2>You are not allowed to see this content</h2></div>
+      </div>
+    </div>
+    <!-- ./ container -->
+
+    <script
+      type="text/javascript"
+      th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"
+    ></script>
+    <script
+      type="text/javascript"
+      th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"
+    ></script>
+  </body>
+</html>

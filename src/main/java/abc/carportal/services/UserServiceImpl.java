@@ -1,0 +1,73 @@
+package abc.carportal.services;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import abc.carportal.models.Role;
+import abc.carportal.models.User;
+import abc.carportal.repository.UserRepository;
+import abc.carportal.utils.UserRegistrationValid;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+  @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
+
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
+
+  public User findById(Long id) {
+    return userRepository.getOne(id);
+  }
+
+  @Override
+  public List<User> findAll() {
+    return this.userRepository.findAll();
+  }
+
+  @Override
+  public Page<User> findAll(Pageable pageable) {
+    return this.userRepository.findAll(pageable);
+  }
+
+  public User save(UserRegistrationValid registration) {
+    User user = new User();
+    user.setFirstName(registration.getFirstName());
+    user.setLastName(registration.getLastName());
+    user.setEmail(registration.getEmail());
+    user.setPassword(passwordEncoder.encode(registration.getPassword()));
+    user.setRoles(Arrays.asList(new Role("ROLE_USER")));
+    return userRepository.save(user);
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException("Invalid username or password.");
+    }
+    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+        mapRolesToAuthorities(user.getRoles()));
+  }
+
+  private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+    return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+  }
+}

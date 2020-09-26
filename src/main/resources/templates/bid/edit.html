@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"
+    />
+    <!-- Custom site CSS styles -->
+    <link
+      rel="stylesheet"
+      href="../public/css/styles.css"
+      th:href="@{/css/styles.css}"
+    />
+
+    <!-- 
+  <script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+-->
+    <!-- Custom site scripts  -->
+    <script
+      src="../public/js/blog-scripts.js"
+      th:src="@{/js/blog-scripts.js}"
+    ></script>
+    <title>Edit Page</title>
+  </head>
+
+  <body>
+    <h2>Update Bid</h2>
+
+    <div class="container row">
+      <form
+        action="#"
+        th:action="@{/bid/edit}"
+        th:object="${bid}"
+        method="post"
+        class="form col-md-5 col-md-offset-7"
+      >
+        <div class="form-group">
+          <label>Title</label>
+          <input type="hidden" th:field="*{id}" />
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Bid Here</span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            aria-label="Amount (to the nearest dollar)"
+            th:field="*{bidPrice}"
+          />
+          <input type="hidden" />
+          <div class="input-group-append">
+            <span class="input-group-text">$</span>
+          </div>
+
+          <div
+            th:if="${#fields.hasErrors('bidPrice')}"
+            th:errors="*{bidPrice}"
+            class="invalid-feedback"
+          ></div>
+
+     
+        <!-- Post Content -->
+        <div class="form-group clearfix">
+          <button type="submit" class="btn btn-primary float-right">
+            Bid Here
+          </button>
+        </div>
+        <!-- Submit Button -->
+        <div class="form-group">
+          <div
+            th:class="${successMessage} ? 'alert alert-success' : ''"
+            th:text="${successMessage}"
+          ></div>
+        </div>
+        <!-- Success message -->
+      </form>
+    </div>
+
+    <footer></footer>
+  </body>
+</html>
