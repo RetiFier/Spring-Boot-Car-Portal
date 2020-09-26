@@ -1,204 +1,188 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"
-    />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}" />
     <!-- Custom site CSS styles -->
-    <link
-      rel="stylesheet"
-      href="../public/css/styles.css"
-      th:href="@{/css/styles.css}"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="../public/css/styles.css" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />
 
     <!-- Use font awesome instead of glyphicons -->
-    <link
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <!-- 
-<script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
--->
+    <!-- <script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>-->
     <!-- Custom site scripts  -->
-    <script
-      src="../public/js/blog-scripts.js"
-      th:src="@{/js/blog-scripts.js}"
-    ></script>
+    <script src="../public/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script>
+
+    <script src="https://kit.fontawesome.com/a264910d53.js" crossorigin="anonymous"></script>
+
     <title>Admin Dashborad</title>
-  </head>
-  <body>
-    <div class="container">
-      <h1>User Listing</h1>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Total Posts</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="u : ${users}">
-            <td th:text="${u.id}"></td>
-            <td th:text="${u.firstName}"></td>
-            <td th:text="${u.lastName}"></td>
-            <td th:text="${u.email}"></td>
-            <td th:text="${#lists.size(u.posts)}"></td>
-            <td th:text="${u.roles[0].name}"></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="pagination justify-content-center">
-            <!-- Send this if you want to let users to change page size property
-					<li th:class="${posts.number eq 0} ? 'page-item disabled' : 'page-item'">
-			            <a class="page-link" th:if="${not posts.first}" th:href="@{${'/posts'}(page=${posts.number-1},size=${posts.size})}">Previous</a>
-			            <a class="page-link" th:if="${posts.first}" href="#">Previous</a>
-			        </li>
-			        -->
+</head>
 
-            <li
-              th:class="${users.number eq 0} ? 'page-item disabled' : 'page-item'"
-            >
-              <a
-                class="page-link"
-                th:if="${not users.first}"
-                th:href="@{${'/admin/dashboard'}(page=${users.number-1})}"
-                >&laquo;</a
-              >
-              <a class="page-link" th:if="${users.first}" href="#">&laquo;</a>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link" href="index.html" th:href="@{/}">
+                    <i class="fas fa-car" style="font-size: 4em; color: #fff;"></i>
+                </a>
             </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
 
-            <li
-              th:each="pageNo : ${#numbers.sequence(0, users.totalPages - 1)}"
-              th:class="${users.number eq pageNo} ? 'page-item active' : 'page-item'"
-            >
-              <a class="page-link" th:if="${users.number  eq pageNo}" href="#">
-                <span th:text="${pageNo + 1}"></span>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav m-auto align-items-center">
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_USER')">
+                        <a class="nav-link" href="posts/create.html" th:href="@{/posts/create}">
+                  Create Post
               </a>
-              <a
-                class="page-link"
-                th:if="${not (users.number  eq pageNo)}"
-                th:href="@{${'/admin/dashboard'}(page=${pageNo})}"
-              >
-                <span th:text="${pageNo + 1}"></span>
+                    </li>
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="admin/dashboard.html" th:href="@{/admin/dashboard}">
+                  Admin Dashboard
               </a>
-            </li>
-            <li
-              th:class="${users.number + 1 ge users.totalPages} ? 'page-item disabled' : 'page-item'"
-            >
-              <a
-                class="page-link"
-                th:if="${not users.last}"
-                th:href="@{${'/admin/dashboard'}(page=${users.number+1})}"
-                >&raquo;</a
-              >
-              <a class="page-link" th:if="${users.last}" href="#">&raquo;</a>
-            </li>
-          </ul>
-          <!-- ./ pagination -->
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="index.html" th:href="@{/}">
+                            <i class="fas fa-car" style="font-size: 6em; color: #fff;"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" th:href="@{/posts}">
+                  View Post
+              </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <!-- ./ col-md-7 -->
-      </div>
-      <h1>Latest Bid</h1>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Bid By</th>
-            <th>Bid Price</th>
-            <th>Bid Item</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="b : ${bid}">
-            <td th:text="${b.id}"></td>
-            <td th:text="${b.bidUser.email}"></td>
-            <td th:text="${b.bidPrice}"></td>
-            <td th:text="${b.item.title}"></td>
-            <td th:text="${#dates.format(b.date, 'dd-MMM-yyyy')}"></td>
-          </tr>
-        </tbody>
-      </table>
+    </nav>
 
-      <div class="row">
-        <div class="col-md-12">
-          <ul class="pagination justify-content-center">
-            <li
-              th:class="${bid.number eq 0} ? 'page-item disabled' : 'page-item'"
-            >
-              <a
-                class="page-link"
-                th:if="${not bid.first}"
-                th:href="@{${'/admin/dashboard'}(page=${bid.number-1})}"
-                >&laquo;</a
-              >
-              <a class="page-link" th:if="${bid.first}" href="#">&laquo;</a>
-            </li>
+    <div class="main mt-3 pt-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>User Listing</h1>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Total Posts</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${users}">
+                                <td th:text="${u.id}"></td>
+                                <td th:text="${u.firstName}"></td>
+                                <td th:text="${u.lastName}"></td>
+                                <td th:text="${u.email}"></td>
+                                <td th:text="${#lists.size(u.posts)}"></td>
+                                <td th:text="${u.roles[0].name}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="pagination justify-content-center">
+                                <!-- Send this if you want to let users to change page size property
+              <li th:class="${posts.number eq 0} ? 'page-item disabled' : 'page-item'">
+                      <a class="page-link" th:if="${not posts.first}" th:href="@{${'/posts'}(page=${posts.number-1},size=${posts.size})}">Previous</a>
+                      <a class="page-link" th:if="${posts.first}" href="#">Previous</a>
+                  </li>
+                  -->
 
-            <li
-              th:each="pageNo : ${#numbers.sequence(0, bid.totalPages - 1)}"
-              th:class="${bid.number eq pageNo} ? 'page-item active' : 'page-item'"
-            >
-              <a class="page-link" th:if="${bid.number  eq pageNo}" href="#">
-                <span th:text="${pageNo + 1}"></span>
-              </a>
-              <a
-                class="page-link"
-                th:if="${not (bid.number  eq pageNo)}"
-                th:href="@{${'/admin/dashboard'}(page=${pageNo})}"
-              >
-                <span th:text="${pageNo + 1}"></span>
-              </a>
-            </li>
-            <li
-              th:class="${bid.number + 1 ge bid.totalPages} ? 'page-item disabled' : 'page-item'"
-            >
-              <a
-                class="page-link"
-                th:if="${not bid.last}"
-                th:href="@{${'/admin/dashboard'}(page=${bid.number+1})}"
-                >&raquo;</a
-              >
-              <a class="page-link" th:if="${bid.last}" href="#">&raquo;</a>
-            </li>
-          </ul>
-          <!-- ./ pagination -->
+                                <li th:class="${users.number eq 0} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link" th:if="${not users.first}" th:href="@{${'/admin/dashboard'}(page=${users.number-1})}">&laquo;</a
+                  >
+                  <a class="page-link" th:if="${users.first}" href="#">&laquo;</a>
+                                </li>
+
+                                <li th:each="pageNo : ${#numbers.sequence(0, users.totalPages - 1)}" th:class="${users.number eq pageNo} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link" th:if="${users.number  eq pageNo}" href="#">
+                                        <span th:text="${pageNo + 1}"></span>
+                                    </a>
+                                    <a class="page-link" th:if="${not (users.number  eq pageNo)}" th:href="@{${'/admin/dashboard'}(page=${pageNo})}">
+                                        <span th:text="${pageNo + 1}"></span>
+                                    </a>
+                                </li>
+                                <li th:class="${users.number + 1 ge users.totalPages} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link" th:if="${not users.last}" th:href="@{${'/admin/dashboard'}(page=${users.number+1})}">&raquo;</a
+                  >
+                  <a class="page-link" th:if="${users.last}" href="#">&raquo;</a>
+                                </li>
+                            </ul>
+                            <!-- ./ pagination -->
+                        </div>
+                        <!-- ./ col-md-7 -->
+                    </div>
+                    <h1>Latest Bid</h1>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Bid By</th>
+                                <th>Bid Price</th>
+                                <th>Bid Item</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="b : ${bid}">
+                                <td th:text="${b.id}"></td>
+                                <td th:text="${b.bidUser.email}"></td>
+                                <td th:text="${b.bidPrice}"></td>
+                                <td th:text="${b.item.title}"></td>
+                                <td th:text="${#dates.format(b.date, 'dd-MMM-yyyy')}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="pagination justify-content-center">
+                                <li th:class="${bid.number eq 0} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link" th:if="${not bid.first}" th:href="@{${'/admin/dashboard'}(page=${bid.number-1})}">&laquo;</a
+                  >
+                  <a class="page-link" th:if="${bid.first}" href="#">&laquo;</a>
+                                </li>
+
+                                <li th:each="pageNo : ${#numbers.sequence(0, bid.totalPages - 1)}" th:class="${bid.number eq pageNo} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link" th:if="${bid.number  eq pageNo}" href="#">
+                                        <span th:text="${pageNo + 1}"></span>
+                                    </a>
+                                    <a class="page-link" th:if="${not (bid.number  eq pageNo)}" th:href="@{${'/admin/dashboard'}(page=${pageNo})}">
+                                        <span th:text="${pageNo + 1}"></span>
+                                    </a>
+                                </li>
+                                <li th:class="${bid.number + 1 ge bid.totalPages} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link" th:if="${not bid.last}" th:href="@{${'/admin/dashboard'}(page=${bid.number+1})}">&raquo;</a
+                  >
+                  <a class="page-link" th:if="${bid.last}" href="#">&raquo;</a>
+                                </li>
+                            </ul>
+                            <!-- ./ pagination -->
+                        </div>
+                        <!-- ./ col-md-7 -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- ./ col-md-7 -->
-      </div>
-      <!-- ./ row -->
     </div>
 
-    <script
-      type="text/javascript"
-      th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"
-    ></script>
-    <script
-      type="text/javascript"
-      th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"
-    ></script>
-    <script
-      src="../public/js/blog-scripts.js"
-      th:src="@{/js/blog-scripts.js}"
-    ></script>
-  </body>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+    <script src="../public/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script>
+</body>
+
 </html>

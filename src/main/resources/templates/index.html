@@ -1,135 +1,127 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
->
-  <head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"
-    />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}" />
     <!-- Custom site CSS styles -->
-    <link
-      rel="stylesheet"
-      href="../public/css/styles.css"
-      th:href="@{/css/styles.css}"
-    />
+    <link rel="stylesheet" href="../public/css/styles.css" th:href="@{/css/styles.css}" />
 
     <!-- 
     <script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
   -->
     <!-- Custom site scripts  -->
-    <script
-      src="../public/js/blog-scripts.js"
-      th:src="@{/js/blog-scripts.js}"
-    ></script>
+    <script src="../public/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script>
+
+    <script src="https://kit.fontawesome.com/a264910d53.js" crossorigin="anonymous"></script>
     <title>Home</title>
-  </head>
-  <body>
-    <header>
-      <a href="index.html" th:href="@{/}">Home</a>
+</head>
 
-      <span sec:authorize="isAuthenticated()">
-        <a
-          sec:authorize="hasAuthority('ROLE_USER')"
-          href="posts/create.html"
-          th:href="@{/posts/create}"
-          >Create Post</a
-        >
-        <a href="posts/index.html" th:href="@{/posts}">Posts</a>
-     
-        <a
-          sec:authorize="hasAuthority('ROLE_ADMIN')"
-          href="admin/dashboard.html"
-          th:href="@{/admin/dashboard}"
-          >Admin Dashboard</a
-        >
-      </span>
-      <div id="logged-in-info">
-        <div sec:authorize="isAuthenticated()">
-          <span
-            >Hello, <b sec:authentication="name"></b> Roles:
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link" href="index.html" th:href="@{/}">
+                    <i class="fas fa-car" style="font-size: 4em; color: #fff;"></i>
+                </a>
+            </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav m-auto align-items-center">
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_USER')">
+                        <a class="nav-link" href="posts/create.html" th:href="@{/posts/create}">
+                          Create Post
+                      </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="admin/dashboard.html" th:href="@{/admin/dashboard}">
+                          Admin Dashboard
+                      </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="index.html" th:href="@{/}">
+                            <i class="fas fa-car" style="font-size: 6em; color: #fff;"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" th:href="@{/posts}">
+                          View Post
+                      </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="main mt-3">
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-12 col-md-8 order-2 order-md-1">
+                    <main id="posts">
+                        <article th:each="p : ${latest5Posts}">
+                            <h2 class="title" th:text="${p.title}">Post Title</h2>
+                            <div class="date">
+                                <i>Posted on</i>
+                                <span th:text="${#dates.format(p.date, 'dd-MMM-yyyy')}"></span>
+                                <span th:if="${p.author}" th:remove="tag">
+            <i>by</i>
+            <span
+              th:text="${p.author.firstName != null ? p.author.firstName   : p.author.email}"
+            ></span>
+                                <span th:text="${p.author.lastName != null ? p.author.lastName  : null}"></span>
+                                </span>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item active">Model</li>
+                                <li class="list-group-item" th:utext="${p.model}"></li>
+                                <li class="list-group-item active">Brand</li>
+                                <li class="list-group-item" th:utext="${p.brand}"></li>
+                                <li class="list-group-item active">Color</li>
+                                <li class="list-group-item" th:utext="${p.color}"></li>
+                                <li class="list-group-item active">Engine Power</li>
+                                <li class="list-group-item" th:utext="${p.enginePower}"></li>
+                                <li class="list-group-item active">License</li>
+                                <li class="list-group-item" th:utext="${p.carLicensePlate}"></li>
+                                <li class="list-group-item active">Description</li>
+                                <li class="list-group-item" th:utext="${p.body}"></li>
+
+                                </span>
+                            </ul>
+                            <div class="text-center mt-3 pt-3">
+                                <a href="#" th:href="@{/posts/view/{id}/(id=${p.id})}" type="button" class="btn btn-primary">View More</a>
+                            </div>
+
+                        </article>
+                    </main>
+                </div>
+                <div class="col-12 col-md-4 order-1 order-md-2">
+                    <div sec:authorize="isAuthenticated()" style="margin-bottom: 30px;">
+                        <h2>Hello!</h2>
+                        <span><b sec:authentication="name"></b><br> Roles:
             <span sec:authentication="principal.authorities"></span>
-          </span>
-          <a ref="#" th:href="@{/user/logout}"
-            ><span class="fa fa-sign-out"></span>Logout</a
+                        </span>
+                        <a ref="#" class="form-control btn btn-primary" th:href="@{/user/logout}"><span class="fa fa-sign-out"></span>Logout</a
           >
         </div>
-        <div sec:authorize="!isAuthenticated()">
-          <a href="user/login.html" th:href="@{/user/login}">Login</a>
-          <a href="user/registration.html" th:href="@{/user/registration}"
-            >Register</a
-          >
+              <aside style="margin-bottom: 30px;">
+                  <h2>Recent Posts</h2>
+                  <a href="#" th:each="p : ${latest5Posts}" th:text="${p.title}" th:href="@{/posts/view/{id}/(id=${p.id})}"></a>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-    </header>
+        <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+        <script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
 
-    <br />
-    <br />
-    <aside>
-      <h2>Recent Posts</h2>
-      <a
-        href="#"
-        th:each="p : ${latest5Posts}"
-        th:text="${p.title}"
-        th:href="@{/posts/view/{id}/(id=${p.id})}"
-      ></a>
-    </aside>
-    <div class="container">
-      <main id="posts">
-        <article th:each="p : ${latest5Posts}">
-          <h2 class="title" th:text="${p.title}">Post Title</h2>
-          <div class="date">
-            <i>Posted on</i>
-            <span th:text="${#dates.format(p.date, 'dd-MMM-yyyy')}"></span>
-            <span th:if="${p.author}" th:remove="tag">
-              <i>by</i>
-              <span
-                th:text="${p.author.firstName != null ? p.author.firstName   : p.author.email}"
-              ></span>
-              <span
-                th:text="${p.author.lastName != null ? p.author.lastName  : null}"
-              ></span>
-            </span>
-          </div>
-          <ul class="list-group">
-            <li class="list-group-item active">Model</li>
-            <li class="list-group-item" th:utext="${p.model}"></li>
-            <li class="list-group-item active">Brand</li>
-            <li class="list-group-item" th:utext="${p.brand}"></li>
-            <li class="list-group-item active">Color</li>
-            <li class="list-group-item" th:utext="${p.color}"></li>
-            <li class="list-group-item active">Engine Power</li>
-            <li class="list-group-item" th:utext="${p.enginePower}"></li>
-            <li class="list-group-item active">License</li>
-            <li class="list-group-item" th:utext="${p.carLicensePlate}"></li>
-            <li class="list-group-item active">Description</li>
-            <li class="list-group-item" th:utext="${p.body}"></li>
-       
-            </span>
-          </ul>
-          <a      
-          href="#"
-   
-          th:href="@{/posts/view/{id}/(id=${p.id})}" 
-          type="button" class="btn btn-primary">View More</a>
-  
-        </article>
-      </main>
-    </div>
-
-    <script
-      type="text/javascript"
-      th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"
-    ></script>
-    <script
-      type="text/javascript"
-      th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"
-    ></script>
-  </body>
 </html>

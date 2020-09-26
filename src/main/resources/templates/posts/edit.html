@@ -1,193 +1,156 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"
-    />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}" />
     <!-- Custom site CSS styles -->
-    <link
-      rel="stylesheet"
-      href="../public/css/styles.css"
-      th:href="@{/css/styles.css}"
-    />
+    <link rel="stylesheet" href="../public/css/styles.css" th:href="@{/css/styles.css}" />
 
     <!-- 
   <script src="../public/js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 -->
     <!-- Custom site scripts  -->
-    <script
-      src="../public/js/blog-scripts.js"
-      th:src="@{/js/blog-scripts.js}"
-    ></script>
+    <script src="../public/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script>
+
+
+    <script src="https://kit.fontawesome.com/a264910d53.js" crossorigin="anonymous"></script>
     <title>Edit Page</title>
-  </head>
+</head>
 
-  <body>
-    <h2>Edit Post</h2>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link" href="index.html" th:href="@{/}">
+                    <i class="fas fa-car" style="font-size: 4em; color: #fff;"></i>
+                </a>
+            </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="container row">
-      <form
-        action="#"
-        th:action="@{/posts/edit}"
-        th:object="${post}"
-        method="post"
-        class="form col-md-5 col-md-offset-7"
-      >
-        <div class="form-group">
-          <label>Title</label>
-          <input type="hidden" th:field="*{id}" />
-          <input type="hidden" th:field="*{author}" />
-          <input
-            type="text"
-            th:field="*{title}"
-            th:class="${#fields.hasErrors('title') ? 'form-control is-invalid' : 'form-control'}"
-          />
-          <div
-            th:if="${#fields.hasErrors('title')}"
-            th:errors="*{title}"
-            class="invalid-feedback"
-          ></div>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav m-auto align-items-center">
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_USER')">
+                        <a class="nav-link" href="posts/create.html" th:href="@{/posts/create}">
+                      Create Post
+                  </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a class="nav-link" href="admin/dashboard.html" th:href="@{/admin/dashboard}">
+                      Admin Dashboard
+                  </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" href="index.html" th:href="@{/}">
+                            <i class="fas fa-car" style="font-size: 6em; color: #fff;"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link" th:href="@{/posts}">
+                      View Post
+                  </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="form-group">
-          <label>Model</label>
-          <input
-            type="text"
-            th:field="*{model}"
-            th:class="${#fields.hasErrors('model') ? 'form-control is-invalid' : 'form-control'}"
-          />
-          <div
-            th:if="${#fields.hasErrors('model')}"
-            th:errors="*{model}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+    <div class="main mt-3 pt-3">
+        <div class="container">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-12 col-sm-6">
+                    <h2>Edit Post</h2>
+                    <form action="#" th:action="@{/posts/edit}" th:object="${post}" method="post" class="form">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="hidden" th:field="*{id}" />
+                            <input type="hidden" th:field="*{author}" />
+                            <input type="text" th:field="*{title}" th:class="${#fields.hasErrors('title') ? 'form-control is-invalid' : 'form-control'}" />
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback"></div>
+                        </div>
 
-        <div class="form-group">
-          <label>Brand</label>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" th:field="*{model}" th:class="${#fields.hasErrors('model') ? 'form-control is-invalid' : 'form-control'}" />
+                            <div th:if="${#fields.hasErrors('model')}" th:errors="*{model}" class="invalid-feedback"></div>
+                        </div>
 
-          <select
-            th:field="*{brand}"
-            th:class="${#fields.hasErrors('brand') ? 'form-control is-invalid' : 'form-control'}"
-          >
-            <option th:value="'ToyoTa'" th:text="ToyoTa"></option>
-            <option th:value="'Audi'" th:text="Audi"></option>
-            <option th:value="'BMW'" th:text="BMW"></option>
-          </select>
-          <div
-            th:if="${#fields.hasErrors('brand')}"
-            th:errors="*{brand}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                        <div class="form-group">
+                            <label>Brand</label>
 
-        <div class="form-group">
-          <label>Engine Power</label>
-          <input
-            type="text"
-            th:field="*{enginePower}"
-            th:class="${#fields.hasErrors('enginePower') ? 'form-control is-invalid' : 'form-control'}"
-          />
-          <div
-            th:if="${#fields.hasErrors('enginePower')}"
-            th:errors="*{enginePower}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                            <select th:field="*{brand}" th:class="${#fields.hasErrors('brand') ? 'form-control is-invalid' : 'form-control'}">
+                    <option th:value="'ToyoTa'" th:text="ToyoTa"></option>
+                    <option th:value="'Audi'" th:text="Audi"></option>
+                    <option th:value="'BMW'" th:text="BMW"></option>
+                  </select>
+                            <div th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}" class="invalid-feedback"></div>
+                        </div>
 
-        <div class="form-group">
-          <label>Color</label>
-          <select
-            th:field="*{color}"
-            th:class="${#fields.hasErrors('color') ? 'form-control is-invalid' : 'form-control'}"
-          >
-            <option th:value="'Blue'" th:text="Blue"></option>
-            <option th:value="'White'" th:text="White"></option>
-            <option th:value="'Black'" th:text="Black"></option>
-            <option th:value="'Yellow'" th:text="Yellow"></option>
-            <option th:value="'Gray'" th:text="Gray"></option>
-          </select>
-          <div
-            th:if="${#fields.hasErrors('color')}"
-            th:errors="*{color}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                        <div class="form-group">
+                            <label>Engine Power</label>
+                            <input type="text" th:field="*{enginePower}" th:class="${#fields.hasErrors('enginePower') ? 'form-control is-invalid' : 'form-control'}" />
+                            <div th:if="${#fields.hasErrors('enginePower')}" th:errors="*{enginePower}" class="invalid-feedback"></div>
+                        </div>
 
-        <div class="form-group">
-          <label>Car License Plate</label>
-          <input
-            type="text"
-            th:field="*{carLicensePlate}"
-            th:class="${#fields.hasErrors('carLicensePlate') ? 'form-control is-invalid' : 'form-control'}"
-          />
-          <div
-            th:if="${#fields.hasErrors('carLicensePlate')}"
-            th:errors="*{carLicensePlate}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <select th:field="*{color}" th:class="${#fields.hasErrors('color') ? 'form-control is-invalid' : 'form-control'}">
+                    <option th:value="'Blue'" th:text="Blue"></option>
+                    <option th:value="'White'" th:text="White"></option>
+                    <option th:value="'Black'" th:text="Black"></option>
+                    <option th:value="'Yellow'" th:text="Yellow"></option>
+                    <option th:value="'Gray'" th:text="Gray"></option>
+                  </select>
+                            <div th:if="${#fields.hasErrors('color')}" th:errors="*{color}" class="invalid-feedback"></div>
+                        </div>
 
-        <div class="form-group">
-          <label>Start Price</label>
-          <input
-            type="number"
-            min="1"
-            step="any"
-            th:field="*{startPrice}"
-            th:class="${#fields.hasErrors('startPrice') ? 'form-control is-invalid' : 'form-control'}"
-          />
-          <div
-            th:if="${#fields.hasErrors('startPrice')}"
-            th:errors="*{startPrice}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                        <div class="form-group">
+                            <label>Car License Plate</label>
+                            <input type="text" th:field="*{carLicensePlate}" th:class="${#fields.hasErrors('carLicensePlate') ? 'form-control is-invalid' : 'form-control'}" />
+                            <div th:if="${#fields.hasErrors('carLicensePlate')}" th:errors="*{carLicensePlate}" class="invalid-feedback"></div>
+                        </div>
 
-        <!-- Post Title -->
-        <div class="form-group">
-          <label>Detail</label>
-          <textarea
-            rows="5"
-            cols=""
-            th:field="*{body}"
-            th:class="${#fields.hasErrors('body') ? 'form-control is-invalid' : 'form-control'}"
-          ></textarea>
-          <div
-            th:if="${#fields.hasErrors('body')}"
-            th:errors="*{body}"
-            class="invalid-feedback"
-          ></div>
-          <div
-            th:if="${#fields.hasErrors('author')}"
-            th:errors="*{author}"
-            class="invalid-feedback"
-          ></div>
-        </div>
+                        <div class="form-group">
+                            <label>Start Price</label>
+                            <input type="number" min="1" step="any" th:field="*{startPrice}" th:class="${#fields.hasErrors('startPrice') ? 'form-control is-invalid' : 'form-control'}" />
+                            <div th:if="${#fields.hasErrors('startPrice')}" th:errors="*{startPrice}" class="invalid-feedback"></div>
+                        </div>
 
-        <!-- Post Content -->
-        <div class="form-group clearfix">
-          <button type="submit" class="btn btn-primary float-right">
-            Update Post
-          </button>
+                        <!-- Post Title -->
+                        <div class="form-group">
+                            <label>Detail</label>
+                            <textarea rows="5" cols="" th:field="*{body}" th:class="${#fields.hasErrors('body') ? 'form-control is-invalid' : 'form-control'}"></textarea>
+                            <div th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="invalid-feedback"></div>
+                            <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Post Content -->
+                        <div class="form-group clearfix">
+                            <button type="submit" class="btn btn-primary float-right">
+                    Update Post
+                  </button>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <div th:class="${successMessage} ? 'alert alert-success' : ''" th:text="${successMessage}"></div>
+                        </div>
+                        <!-- Success message -->
+                    </form>
+                </div>
+                <div class="col"></div>
+            </div>
         </div>
-        <!-- Submit Button -->
-        <div class="form-group">
-          <div
-            th:class="${successMessage} ? 'alert alert-success' : ''"
-            th:text="${successMessage}"
-          ></div>
-        </div>
-        <!-- Success message -->
-      </form>
     </div>
 
+
+
     <footer></footer>
-  </body>
+</body>
+
 </html>
